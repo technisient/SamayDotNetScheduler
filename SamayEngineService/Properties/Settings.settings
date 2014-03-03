@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Technisient.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TasksDirectory" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">..\Tasks</Value>
+    </Setting>
+    <Setting Name="DatabasePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">..\DB\Samay.db</Value>
+    </Setting>
+    <Setting Name="DatabasePassword" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">kDyS2NwPzC^1G*7@</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,9 @@
+SCMBranch=Samay
+SCMRepository=Samay/Jobs/SendEmail
+SCMMainlineUUID={fc65c8cc-bbc9-4dff-90de-36a5cee105c3}
+SCMBranchRepositoryID=13
+Program.cs;2651507234;1;1288998685;
+app.config;3869278414;1;1289095897;
+SendEmail.csproj.vspscc;1125686722;1;1296544160;
+SendEmail.csproj;2657437138;6;1302240111;
+SendEmail.cs;2768084357;5;1304085979;

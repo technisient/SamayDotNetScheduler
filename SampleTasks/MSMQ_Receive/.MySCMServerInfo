@@ -1,0 +1,9 @@
+SCMBranch=Samay
+SCMRepository=Samay/Jobs/MSMQ_Receive
+SCMMainlineUUID={fc65c8cc-bbc9-4dff-90de-36a5cee105c3}
+SCMBranchRepositoryID=7
+Program.cs;2253378896;1;1298865806;
+MSMQ_Receive.csproj.vspscc;943415115;1;1296544160;
+MSMQ_Receive.cs;2903686577;5;1299129244;
+MSMQ_Receive.csproj;3593677070;7;1302240111;
+app.config;3869278414;1;1302240112;
