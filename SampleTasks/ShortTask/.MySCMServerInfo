@@ -1,9 +1,0 @@
-SCMBranch=Samay
-SCMRepository=Samay/Jobs/ShortTask
-SCMMainlineUUID={fc65c8cc-bbc9-4dff-90de-36a5cee105c3}
-SCMBranchRepositoryID=15
-Program.cs;4120066164;1;1289000850;
-ShortTask.csproj.vspscc;1716364696;1;1296544160;
-app.config;3869278414;1;1289095902;
-ShortTask.cs;310076616;5;1299129157;
-ShortTask.csproj;1960048610;6;1302240111;

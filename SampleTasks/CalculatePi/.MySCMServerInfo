@@ -1,9 +1,0 @@
-SCMBranch=Samay
-SCMRepository=Samay/Jobs/CalculatePi
-SCMMainlineUUID={fc65c8cc-bbc9-4dff-90de-36a5cee105c3}
-SCMBranchRepositoryID=3
-Program.cs;256579670;1;1289403400;
-CalculatePi.csproj.vspscc;1832735284;1;1296544160;
-CalculatePi.csproj;224575500;6;1302240111;
-app.config;3869278414;1;1302240112;
-CalculatePi.cs;881022182;10;1307886814;

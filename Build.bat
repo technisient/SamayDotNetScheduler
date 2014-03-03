@@ -1,1 +1,0 @@
-msbuild C:\SVN\Development\SamayEngine.sln /t:Rebuild /p:Configuration=Release

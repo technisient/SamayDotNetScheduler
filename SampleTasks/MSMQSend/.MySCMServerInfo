@@ -1,9 +1,0 @@
-SCMBranch=Samay
-SCMRepository=Samay/Jobs/MSMQSend
-SCMMainlineUUID={fc65c8cc-bbc9-4dff-90de-36a5cee105c3}
-SCMBranchRepositoryID=9
-Program.cs;3811225101;1;1288999720;
-MSMQSend.csproj.vspscc;3745626672;1;1296544160;
-app.config;3869278414;1;1289095881;
-MSMQSend.csproj;2382943049;6;1302240111;
-MSMQSend.cs;3157977337;8;1307241092;
