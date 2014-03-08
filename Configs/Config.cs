@@ -1,23 +1,34 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using Technisient.SamayConfig;
-using System.Data.SQLite;
-using System.Configuration;
-using Technisient.Properties;
 using System.Data;
-using Newtonsoft.Json;
+using System.Data.SQLite;
+using Technisient.SamayConfig;
 
 namespace Technisient
 {
     public static class Config
     {
+        public static bool AddJob(string jobString, string comment, string samayDB_ConnectionString)
+        {
+            Engine engine = GetSamayConfig(samayDB_ConnectionString);
+            Job job = JsonConvert.DeserializeObject<Job>(jobString);
+
+            foreach (var j in engine.Jobs)
+            {
+                if (j.JobName.ToLower() == job.JobName.ToLower())
+                {
+                    SamayLogger.Log("Failed to add new Job '" + job.JobName + "'. Job already exists", SamayLogger.SamayEngineLogJobName, "Config", "Engine", LogLevel.Error);
+                    throw new Exception("Job with the name '" + job.JobName + "' already exists");
+                }
+            }
+
+            engine.Jobs.Add(job);
+            SaveSamayConfig(engine, comment, samayDB_ConnectionString);
+            SamayLogger.Log("Successfully added new Job '" + job.JobName + "'", SamayLogger.SamayEngineLogJobName, "Config", "Engine", LogLevel.Info);
+            return true;
+        }
+
         public static Engine GetSamayConfig(string samayDB_ConnectionString)
         {
             // XmlSerializer serializer = new XmlSerializer(typeof(Engine));
@@ -56,6 +67,74 @@ namespace Technisient
             return output;
         }
 
+        public static Engine GetSampleConfig()
+        {
+            Engine engine = new Engine();
+            engine.EngineConfig.GlobalExcludeDates.Add(new GlobalExcludeDate { Date = new DateTime(2014, 12, 25), Note = "Christmas" });
+            engine.EngineConfig.LogLevel = LogLevel.Trace;
+
+            Job calcPi = new Job();
+            calcPi.JobName = "Calculate Pie";
+
+            calcPi.Interval = new JobInterval { Interval_msec = 10000 };
+            calcPi.Schedules.Add(new JobSchedule
+            {
+                JobScheduleType = JobScheduleTypeEnum.JobScheduleDaily,
+                ScheduleConfig = new JobScheduleDaily
+                {
+                    Time = new Time
+                    {
+                        StartTime = new DateTime(1, 1, 1, 00, 5, 0),
+                        EndTime = new DateTime(1, 1, 1, 23, 55, 0),
+                        EndTimeSpecified = true
+                    }
+                }
+            });
+
+            Task piTask = new Task
+            {
+                ClassName = "JobsNS.CalculatePi",
+                LogLevel = Technisient.LogLevel.Trace,
+                param = new List<TaskParameter>{
+                    new TaskParameter{
+                        Name= "PiLength",
+                        Value = new List<string>{"30"}
+                    }
+                }
+            };
+            calcPi.TaskChain = new TaskChain { Task = new List<Task> { piTask } };
+
+            engine.Jobs.Add(calcPi);
+
+            return engine;
+        }
+
+        public static bool RemoveJob(string jobName, string comment, string samayDB_ConnectionString)
+        {
+            Engine engine = GetSamayConfig(samayDB_ConnectionString);
+            Job jobToRemove = null;
+
+            foreach (var j in engine.Jobs)
+            {
+                if (j.JobName.ToLower() == jobName.ToLower())
+                {
+                    jobToRemove = j;
+                    break;
+                }
+            }
+
+            if (jobToRemove != null)
+            {
+                engine.Jobs.Remove(jobToRemove);
+                SaveSamayConfig(engine, comment, samayDB_ConnectionString);
+                SamayLogger.Log("Successfully removed new Job '" + jobName + "'", SamayLogger.SamayEngineLogJobName, "Config", "Engine", LogLevel.Info);
+                return true;
+            }
+
+            SamayLogger.Log("Failed to removed new Job '" + jobName + "'. Job does not exist", SamayLogger.SamayEngineLogJobName, "Config", "Engine", LogLevel.Error);
+
+            throw new Exception("Job '" + jobName + "' does not exist");
+        }
 
         public static bool SaveSamayConfig(Engine config, string comment, string samayDB_ConnectionString)
         {
@@ -96,97 +175,6 @@ namespace Technisient
                     cn.Close();
                 }
             }
-        }
-
-        public static Engine GetSampleConfig()
-        {
-            Engine engine = new Engine();
-            engine.EngineConfig.GlobalExcludeDates.Add(new GlobalExcludeDate { Date = new DateTime(2014, 12, 25), Note = "Christmas" });
-            engine.EngineConfig.LogLevel = LogLevel.Trace;
-
-            Job calcPi = new Job();
-            calcPi.JobName = "Calculate Pie";
-
-            calcPi.Interval = new JobInterval { Interval_msec = 10000 };
-            calcPi.Schedules.Add(new JobSchedule
-            {
-                JobScheduleType = JobScheduleTypeEnum.JobScheduleDaily,
-                ScheduleConfig = new JobScheduleDaily
-                {
-                    Time = new Time
-                    {
-                        StartTime = new DateTime(1, 1, 1, 00, 5, 0),
-                        EndTime = new DateTime(1, 1, 1, 23, 55, 0),
-                        EndTimeSpecified = true
-                    }
-                }
-            });
-
-            Task piTask = new Task
-            {
-                ClassName = "JobsNS.CalculatePi",
-                LogLevel = Technisient.LogLevel.Trace,
-                param = new List<TaskParameter>{
-                    new TaskParameter{ 
-                        Name= "PiLength", 
-                        Value = new List<string>{"30"}
-                    }
-                }
-            };
-            calcPi.TaskChain = new TaskChain { Task = new List<Task> { piTask } };
-
-            engine.Jobs.Add(calcPi);
-
-            return engine;
-        }
-
-
-        public static bool AddJob(string jobString, string comment, string samayDB_ConnectionString)
-        {
-            Engine engine = GetSamayConfig(samayDB_ConnectionString);
-            Job job = JsonConvert.DeserializeObject<Job>(jobString);
-
-            foreach (var j in engine.Jobs)
-            {
-                if (j.JobName.ToLower() == job.JobName.ToLower())
-                {
-                    SamayLogger.Log("Failed to add new Job '" + job.JobName + "'. Job already exists", SamayLogger.SamayEngineLogJobName, "Config", "Engine", LogLevel.Error);
-                    throw new Exception("Job with the name '" + job.JobName + "' already exists");
-                }
-            }
-
-            engine.Jobs.Add(job);
-            SaveSamayConfig(engine, comment, samayDB_ConnectionString);
-            SamayLogger.Log("Successfully added new Job '" + job.JobName + "'", SamayLogger.SamayEngineLogJobName, "Config", "Engine", LogLevel.Info);
-            return true;
-        }
-
-        public static bool RemoveJob(string jobName, string comment, string samayDB_ConnectionString)
-        {
-            Engine engine = GetSamayConfig(samayDB_ConnectionString);
-            Job jobToRemove = null;
-
-            foreach (var j in engine.Jobs)
-            {
-                if (j.JobName.ToLower() == jobName.ToLower())
-                {
-                    jobToRemove = j;
-                    break;
-                }
-            }
-
-            if (jobToRemove != null)
-            {
-                engine.Jobs.Remove(jobToRemove);
-                SaveSamayConfig(engine, comment, samayDB_ConnectionString);
-                SamayLogger.Log("Successfully removed new Job '" + jobName + "'", SamayLogger.SamayEngineLogJobName, "Config", "Engine", LogLevel.Info);
-                return true;
-            }
-
-            SamayLogger.Log("Failed to removed new Job '" + jobName + "'. Job does not exist", SamayLogger.SamayEngineLogJobName, "Config", "Engine", LogLevel.Error);
-                
-            throw new Exception("Job '" + jobName + "' does not exist");
-
         }
     }
 }

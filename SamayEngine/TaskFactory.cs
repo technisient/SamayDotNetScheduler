@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
 using System.IO;
+using System.Reflection;
 using Technisient.Properties;
 
 namespace Technisient
@@ -12,7 +10,7 @@ namespace Technisient
     {
         internal Dictionary<string, string> Initialize()
         {
-              Dictionary<string, string> TaskAssemblyDict = new Dictionary<string, string>();
+            Dictionary<string, string> TaskAssemblyDict = new Dictionary<string, string>();
 
             //cache all Tasks assembly names in the beginning.
             DirectoryInfo dI = new DirectoryInfo(Technisient.SamayEngine.EnsureFullPath(Settings.Default.TasksDirectory));
@@ -30,7 +28,7 @@ namespace Technisient
                         if (!classType.IsClass)
                             continue;
 
-                        if (classType.BaseType.FullName =="Technisient.TaskBase")
+                        if (classType.BaseType.FullName == "Technisient.TaskBase")
                         {
                             TaskAssemblyDict.Add(classType.FullName, f.FullName);
                         }
@@ -40,7 +38,6 @@ namespace Technisient
                 {
                     SamayLogger.LogError("Unable to Load Assembly: " + f.FullName + "\n" + ex.ToString(), SamayLogger.SamayEngineLogJobName, "Engine", SamayLogger.SamayEngineLoggingGUID, DateTime.Now);
                 }
-
             }
 
             AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(CurrentDomain_AssemblyResolve);
@@ -48,7 +45,7 @@ namespace Technisient
             return TaskAssemblyDict;
         }
 
-        Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs resolveEventArgs)
+        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs resolveEventArgs)
         {
             try
             {
@@ -67,7 +64,5 @@ namespace Technisient
                 throw ex;
             }
         }
-
-        
     }
 }

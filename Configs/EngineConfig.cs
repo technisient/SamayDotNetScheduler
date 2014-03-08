@@ -1,19 +1,78 @@
 ﻿using System;
 using System.Collections.Generic;
+
 namespace Technisient.SamayConfig
 {
+    public enum DayName
+    {
+        Sunday,
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday,
+        Saturday,
+    }
+
+    public enum JobScheduleTypeEnum
+    {
+        JobScheduleDaily,
+        JobScheduleWeekly,
+        JobScheduleMonthly,
+        JobScheduleYearly,
+        JobScheduleOneTimeOnly,
+    }
+
+    public enum MonthName
+    {
+        January,
+        February,
+        March,
+        April,
+        May,
+        June,
+        July,
+        August,
+        September,
+        October,
+        November,
+        December,
+    }
+
+    public enum WeekRecurrence
+    {
+        Every,
+        First,
+        Second,
+        Third,
+        Fourth,
+        Fifth,
+        Sixth,
+        Last,
+    }
 
     public class Engine
     {
+        private EngineSettings engineConfigField;
         private List<Job> jobsField;
         private List<Task> taskDefaultsField;
-        private EngineSettings engineConfigField;
-
         public Engine()
         {
             jobsField = new List<Job>();
             taskDefaultsField = new List<Task>();
             engineConfigField = new EngineSettings();
+        }
+
+        public EngineSettings EngineConfig
+        {
+            get
+            {
+                return this.engineConfigField;
+            }
+            set
+            {
+                this.engineConfigField = value;
+            }
         }
 
         public List<Job> Jobs
@@ -39,43 +98,119 @@ namespace Technisient.SamayConfig
                 this.taskDefaultsField = value;
             }
         }
+    }
 
-        public EngineSettings EngineConfig
+    public class EngineSettings
+    {
+        private bool enabledField;
+        private List<GlobalExcludeDate> globalExcludeDatesField;
+        private LogLevel logLevelField;
+        private int logRetentionDaysField;
+        private int maxCPUField;
+        private int sleepTicksField;
+        public EngineSettings()
+        {
+            this.logLevelField = LogLevel.Error;
+            this.sleepTicksField = 10000;
+            this.enabledField = true;
+            this.globalExcludeDatesField = new List<GlobalExcludeDate>();
+            this.logRetentionDaysField = 60;
+        }
+
+        public bool Enabled
         {
             get
             {
-                return this.engineConfigField;
+                return this.enabledField;
             }
             set
             {
-                this.engineConfigField = value;
+                this.enabledField = value;
+            }
+        }
+
+        public List<GlobalExcludeDate> GlobalExcludeDates
+        {
+            get
+            {
+                return this.globalExcludeDatesField;
+            }
+            set
+            {
+                this.globalExcludeDatesField = value;
+            }
+        }
+
+        public LogLevel LogLevel
+        {
+            get
+            {
+                return this.logLevelField;
+            }
+            set
+            {
+                this.logLevelField = value;
+            }
+        }
+
+        public int LogRetentionDays
+        {
+            get
+            {
+                return this.logRetentionDaysField;
+            }
+            set
+            {
+                this.logRetentionDaysField = value;
+            }
+        }
+
+        public int MaxCPU
+        {
+            get
+            {
+                return this.maxCPUField;
+            }
+            set
+            {
+                this.maxCPUField = value;
+            }
+        }
+
+        public int SleepTicks
+        {
+            get
+            {
+                return this.sleepTicksField;
+            }
+            set
+            {
+                this.sleepTicksField = value;
             }
         }
     }
 
-
-    public class Job : ICloneable
+    public class GlobalExcludeDate
     {
+        private System.DateTime dateField;
         private string idField;
-        private string jobNameField;
-        private bool enabledField;
-        private int executeTimesField;
-        private JobInterval intervalField;
-        private List<JobSchedule> schedulesField;
-        private List<JobExcludeDates> excludeDatesField;
-        private bool doNotRunOnGlobalExcludeDatesField;
-        private TaskChain taskChainField;
+        private string noteField;
 
-        public Job()
+        public GlobalExcludeDate()
         {
-            this.executeTimesField = -1;
-            this.doNotRunOnGlobalExcludeDatesField = true;
-            this.idField = Guid.NewGuid().ToString();
-            this.enabledField = true;
-            this.schedulesField = new List<JobSchedule>();
-            this.intervalField = new JobInterval();
-            this.intervalField.Interval_msec = 60000; //default 
-           
+            idField = Guid.NewGuid().ToString();
+        }
+
+        public System.DateTime Date
+        {
+            get
+            {
+                return this.dateField;
+            }
+            set
+            {
+                this.dateField = value;
+            }
         }
 
         public string Id
@@ -89,16 +224,51 @@ namespace Technisient.SamayConfig
                 this.idField = value;
             }
         }
-
-        public string JobName
+        public string Note
         {
             get
             {
-                return this.jobNameField;
+                return this.noteField;
             }
             set
             {
-                this.jobNameField = value;
+                this.noteField = value;
+            }
+        }
+    }
+
+    public class Job : ICloneable
+    {
+        private bool doNotRunOnGlobalExcludeDatesField;
+        private bool enabledField;
+        private List<JobExcludeDates> excludeDatesField;
+        private int executeTimesField;
+        private string idField;
+        private JobInterval intervalField;
+        private string jobNameField;
+        private List<JobSchedule> schedulesField;
+        private TaskChain taskChainField;
+
+        public Job()
+        {
+            this.executeTimesField = -1;
+            this.doNotRunOnGlobalExcludeDatesField = true;
+            this.idField = Guid.NewGuid().ToString();
+            this.enabledField = true;
+            this.schedulesField = new List<JobSchedule>();
+            this.intervalField = new JobInterval();
+            this.intervalField.Interval_msec = 60000; //default
+        }
+
+        public bool DoNotRunOnGlobalExcludeDates
+        {
+            get
+            {
+                return this.doNotRunOnGlobalExcludeDatesField;
+            }
+            set
+            {
+                this.doNotRunOnGlobalExcludeDatesField = value;
             }
         }
 
@@ -114,6 +284,18 @@ namespace Technisient.SamayConfig
             }
         }
 
+        public List<JobExcludeDates> ExcludeDates
+        {
+            get
+            {
+                return this.excludeDatesField;
+            }
+            set
+            {
+                this.excludeDatesField = value;
+            }
+        }
+
         public int ExecuteTimes
         {
             get
@@ -123,6 +305,18 @@ namespace Technisient.SamayConfig
             set
             {
                 this.executeTimesField = value;
+            }
+        }
+
+        public string Id
+        {
+            get
+            {
+                return this.idField;
+            }
+            set
+            {
+                this.idField = value;
             }
         }
 
@@ -138,6 +332,17 @@ namespace Technisient.SamayConfig
             }
         }
 
+        public string JobName
+        {
+            get
+            {
+                return this.jobNameField;
+            }
+            set
+            {
+                this.jobNameField = value;
+            }
+        }
         public List<JobSchedule> Schedules
         {
             get
@@ -149,31 +354,6 @@ namespace Technisient.SamayConfig
                 this.schedulesField = value;
             }
         }
-
-        public List<JobExcludeDates> ExcludeDates
-        {
-            get
-            {
-                return this.excludeDatesField;
-            }
-            set
-            {
-                this.excludeDatesField = value;
-            }
-        }
-
-        public bool DoNotRunOnGlobalExcludeDates
-        {
-            get
-            {
-                return this.doNotRunOnGlobalExcludeDatesField;
-            }
-            set
-            {
-                this.doNotRunOnGlobalExcludeDatesField = value;
-            }
-        }
-
         public TaskChain TaskChain
         {
             get
@@ -193,20 +373,47 @@ namespace Technisient.SamayConfig
         }
     }
 
+    public class JobExcludeDates
+    {
+        private System.DateTime dateField;
+
+        public System.DateTime Date
+        {
+            get
+            {
+                return this.dateField;
+            }
+            set
+            {
+                this.dateField = value;
+            }
+        }
+    }
 
     public class JobInterval
     {
         //EITHER msec is set or ontheclock
+
+        private List<int> clockTimeField;
+
+        private int interval_msecField;
 
         public JobInterval()
         {
             interval_msecField = -1;
             clockTimeField = null;
         }
-
-        private int interval_msecField;
-
-        private List<int> clockTimeField;
+        public List<int> ClockTime
+        {
+            get
+            {
+                return this.clockTimeField;
+            }
+            set
+            {
+                this.clockTimeField = value;
+            }
+        }
 
         public int Interval_msec
         {
@@ -219,39 +426,19 @@ namespace Technisient.SamayConfig
                 this.interval_msecField = value;
             }
         }
-
-        public List<int> ClockTime
-        {
-            get
-            {
-                return this.clockTimeField;
-            }
-            set
-            {
-                this.clockTimeField = value;
-            }
-        }
     }
 
-
-
-
-
-    public class Task
+    public class JobSchedule
     {
         private string idField;
-        private string classNameField;
-        private LogLevel logLevelField;
-        private List<TaskParameter> paramField;
-        private TaskRetryOnError retryOnErrorField;
-
-        public Task()
+        private JobScheduleTypeEnum jobScheduleTypeField;
+        private object scheduleConfigField;
+        public JobSchedule()
         {
-            this.logLevelField = LogLevel.Error;
-            this.idField = Guid.NewGuid().ToString();
+            idField = Guid.NewGuid().ToString();
         }
 
-        public string Id
+        public string ID
         {
             get
             {
@@ -261,138 +448,6 @@ namespace Technisient.SamayConfig
             {
                 this.idField = value;
             }
-        }
-
-        public string ClassName
-        {
-            get
-            {
-                return this.classNameField;
-            }
-            set
-            {
-                this.classNameField = value;
-            }
-        }
-
-        public LogLevel LogLevel
-        {
-            get
-            {
-                return this.logLevelField;
-            }
-            set
-            {
-                this.logLevelField = value;
-            }
-        }
-
-        public List<TaskParameter> param
-        {
-            get
-            {
-                return this.paramField;
-            }
-            set
-            {
-                this.paramField = value;
-            }
-        }
-
-        public TaskRetryOnError RetryOnError
-        {
-            get
-            {
-                return this.retryOnErrorField;
-            }
-            set
-            {
-                this.retryOnErrorField = value;
-            }
-        }
-    }
-
-
-
-
-    public class TaskParameter
-    {
-        private string nameField;
-        private List<string> valueField;
-
-        public string Name
-        {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
-        }
-
-        public List<string> Value
-        {
-            get
-            {
-                return this.valueField;
-            }
-            set
-            {
-                this.valueField = value;
-            }
-        }
-    }
-
-
-
-    public class TaskRetryOnError
-    {
-        private int retryTimesField;
-        private int retryDelay_msecField;
-
-        public TaskRetryOnError()
-        {
-            this.retryTimesField = 3;
-            this.retryDelay_msecField = 100;
-        }
-
-        public int RetryTimes
-        {
-            get
-            {
-                return this.retryTimesField;
-            }
-            set
-            {
-                this.retryTimesField = value;
-            }
-        }
-
-        public int RetryDelay_msec
-        {
-            get
-            {
-                return this.retryDelay_msecField;
-            }
-            set
-            {
-                this.retryDelay_msecField = value;
-            }
-        }
-    }
-
-
-    public class JobSchedule
-    {
-        private JobScheduleTypeEnum jobScheduleTypeField;
-        private object scheduleConfigField;
-        private string idField;
-
-        public JobSchedule()
-        {
-            idField = Guid.NewGuid().ToString();
         }
 
         public JobScheduleTypeEnum JobScheduleType
@@ -418,30 +473,7 @@ namespace Technisient.SamayConfig
                 this.scheduleConfigField = value;
             }
         }
-
-
-        public string ID
-        {
-            get
-            {
-                return this.idField;
-            }
-            set
-            {
-                this.idField = value;
-            }
-        }
     }
-
-    public enum JobScheduleTypeEnum
-    {
-        JobScheduleDaily,
-        JobScheduleWeekly,
-        JobScheduleMonthly,
-        JobScheduleYearly,
-        JobScheduleOneTimeOnly,
-    }
-
 
     public class JobScheduleDaily
     {
@@ -460,52 +492,6 @@ namespace Technisient.SamayConfig
         }
     }
 
-
-    public class Time
-    {
-        private System.DateTime startTimeField;
-        private System.DateTime endTimeField;
-        private bool endTimeFieldSpecified;
-
-        public System.DateTime StartTime
-        {
-            get
-            {
-                return this.startTimeField;
-            }
-            set
-            {
-                this.startTimeField = value;
-            }
-        }
-
-        public System.DateTime EndTime
-        {
-            get
-            {
-                return this.endTimeField;
-            }
-            set
-            {
-                this.endTimeField = value;
-            }
-        }
-
-
-        public bool EndTimeSpecified
-        {
-            get
-            {
-                return this.endTimeFieldSpecified;
-            }
-            set
-            {
-                this.endTimeFieldSpecified = value;
-            }
-        }
-    }
-
-
     public class JobScheduleMonthly
     {
         private JobScheduleMonthlyDay dayField;
@@ -522,7 +508,6 @@ namespace Technisient.SamayConfig
             }
         }
     }
-
 
     public class JobScheduleMonthlyDay
     {
@@ -554,25 +539,11 @@ namespace Technisient.SamayConfig
         }
     }
 
-
     public class JobScheduleOneTimeOnly
     {
-        private System.DateTime startDateTimeField;
         private System.DateTime endDateTimeField;
         private bool endDateTimeFieldSpecified;
-
-        public System.DateTime StartDateTime
-        {
-            get
-            {
-                return this.startDateTimeField;
-            }
-            set
-            {
-                this.startDateTimeField = value;
-            }
-        }
-
+        private System.DateTime startDateTimeField;
         public System.DateTime EndDateTime
         {
             get
@@ -585,7 +556,6 @@ namespace Technisient.SamayConfig
             }
         }
 
-
         public bool EndDateTimeSpecified
         {
             get
@@ -597,8 +567,19 @@ namespace Technisient.SamayConfig
                 this.endDateTimeFieldSpecified = value;
             }
         }
-    }
 
+        public System.DateTime StartDateTime
+        {
+            get
+            {
+                return this.startDateTimeField;
+            }
+            set
+            {
+                this.startDateTimeField = value;
+            }
+        }
+    }
 
     public class JobScheduleWeekly
     {
@@ -616,7 +597,6 @@ namespace Technisient.SamayConfig
             }
         }
     }
-
 
     public class JobScheduleWeeklyDay
     {
@@ -661,32 +641,6 @@ namespace Technisient.SamayConfig
         }
     }
 
-
-    public enum DayName
-    {
-        Sunday,
-        Monday,
-        Tuesday,
-        Wednesday,
-        Thursday,
-        Friday,
-        Saturday,
-    }
-
-
-    public enum WeekRecurrence
-    {
-        Every,
-        First,
-        Second,
-        Third,
-        Fourth,
-        Fifth,
-        Sixth,
-        Last,
-    }
-
-
     public class JobScheduleYearly
     {
         private JobScheduleYearlyMonth monthField;
@@ -704,24 +658,11 @@ namespace Technisient.SamayConfig
         }
     }
 
-
     public class JobScheduleYearlyMonth
     {
-        private MonthName monthNameField;
         private int dayField;
+        private MonthName monthNameField;
         private Time timeField;
-
-        public MonthName MonthName
-        {
-            get
-            {
-                return this.monthNameField;
-            }
-            set
-            {
-                this.monthNameField = value;
-            }
-        }
 
         public int Day
         {
@@ -735,6 +676,17 @@ namespace Technisient.SamayConfig
             }
         }
 
+        public MonthName MonthName
+        {
+            get
+            {
+                return this.monthNameField;
+            }
+            set
+            {
+                this.monthNameField = value;
+            }
+        }
         public Time Time
         {
             get
@@ -748,40 +700,79 @@ namespace Technisient.SamayConfig
         }
     }
 
-    public enum MonthName
+    public class Task
     {
-        January,
-        February,
-        March,
-        April,
-        May,
-        June,
-        July,
-        August,
-        September,
-        October,
-        November,
-        December,
-    }
+        private string classNameField;
+        private string idField;
+        private LogLevel logLevelField;
+        private List<TaskParameter> paramField;
+        private TaskRetryOnError retryOnErrorField;
 
+        public Task()
+        {
+            this.logLevelField = LogLevel.Error;
+            this.idField = Guid.NewGuid().ToString();
+        }
 
-    public class JobExcludeDates
-    {
-        private System.DateTime dateField;
-
-        public System.DateTime Date
+        public string ClassName
         {
             get
             {
-                return this.dateField;
+                return this.classNameField;
             }
             set
             {
-                this.dateField = value;
+                this.classNameField = value;
+            }
+        }
+
+        public string Id
+        {
+            get
+            {
+                return this.idField;
+            }
+            set
+            {
+                this.idField = value;
+            }
+        }
+        public LogLevel LogLevel
+        {
+            get
+            {
+                return this.logLevelField;
+            }
+            set
+            {
+                this.logLevelField = value;
+            }
+        }
+
+        public List<TaskParameter> param
+        {
+            get
+            {
+                return this.paramField;
+            }
+            set
+            {
+                this.paramField = value;
+            }
+        }
+
+        public TaskRetryOnError RetryOnError
+        {
+            get
+            {
+                return this.retryOnErrorField;
+            }
+            set
+            {
+                this.retryOnErrorField = value;
             }
         }
     }
-
 
     public class TaskChain
     {
@@ -813,145 +804,108 @@ namespace Technisient.SamayConfig
         }
     }
 
-
-    public class EngineSettings
+    public class TaskParameter
     {
-        private bool enabledField;
-        private LogLevel logLevelField;
-        private int sleepTicksField;
-        private int maxCPUField;
-        private List<GlobalExcludeDate> globalExcludeDatesField;
-        private int logRetentionDaysField;
+        private string nameField;
+        private List<string> valueField;
 
-        public EngineSettings()
-        {
-            this.logLevelField = LogLevel.Error;
-            this.sleepTicksField = 10000;
-            this.enabledField = true;
-            this.globalExcludeDatesField = new List<GlobalExcludeDate>();
-            this.logRetentionDaysField = 60;
-        }
-
-        public bool Enabled
+        public string Name
         {
             get
             {
-                return this.enabledField;
+                return this.nameField;
             }
             set
             {
-                this.enabledField = value;
+                this.nameField = value;
             }
         }
 
-        public LogLevel LogLevel
+        public List<string> Value
         {
             get
             {
-                return this.logLevelField;
+                return this.valueField;
             }
             set
             {
-                this.logLevelField = value;
-            }
-        }
-
-        public int SleepTicks
-        {
-            get
-            {
-                return this.sleepTicksField;
-            }
-            set
-            {
-                this.sleepTicksField = value;
-            }
-        }
-
-        public int MaxCPU
-        {
-            get
-            {
-                return this.maxCPUField;
-            }
-            set
-            {
-                this.maxCPUField = value;
-            }
-        }
-
-        public int LogRetentionDays
-        {
-            get
-            {
-                return this.logRetentionDaysField;
-            }
-            set
-            {
-                this.logRetentionDaysField = value;
-            }
-        }
-
-
-
-        public List<GlobalExcludeDate> GlobalExcludeDates
-        {
-            get
-            {
-                return this.globalExcludeDatesField;
-            }
-            set
-            {
-                this.globalExcludeDatesField = value;
+                this.valueField = value;
             }
         }
     }
 
-
-    public class GlobalExcludeDate
+    public class TaskRetryOnError
     {
-        private string idField;
-        private System.DateTime dateField;
-        private string noteField;
-
-        public GlobalExcludeDate()
+        private int retryDelay_msecField;
+        private int retryTimesField;
+        public TaskRetryOnError()
         {
-            idField = Guid.NewGuid().ToString();
+            this.retryTimesField = 3;
+            this.retryDelay_msecField = 100;
         }
 
-        public string Id
+        public int RetryDelay_msec
         {
             get
             {
-                return this.idField;
+                return this.retryDelay_msecField;
             }
             set
             {
-                this.idField = value;
+                this.retryDelay_msecField = value;
             }
         }
 
-        public System.DateTime Date
+        public int RetryTimes
         {
             get
             {
-                return this.dateField;
+                return this.retryTimesField;
             }
             set
             {
-                this.dateField = value;
+                this.retryTimesField = value;
+            }
+        }
+    }
+    public class Time
+    {
+        private System.DateTime endTimeField;
+        private bool endTimeFieldSpecified;
+        private System.DateTime startTimeField;
+        public System.DateTime EndTime
+        {
+            get
+            {
+                return this.endTimeField;
+            }
+            set
+            {
+                this.endTimeField = value;
             }
         }
 
-        public string Note
+        public bool EndTimeSpecified
         {
             get
             {
-                return this.noteField;
+                return this.endTimeFieldSpecified;
             }
             set
             {
-                this.noteField = value;
+                this.endTimeFieldSpecified = value;
+            }
+        }
+
+        public System.DateTime StartTime
+        {
+            get
+            {
+                return this.startTimeField;
+            }
+            set
+            {
+                this.startTimeField = value;
             }
         }
     }

@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Technisient
 {
     public partial class SamayEngineService : ServiceBase
     {
-        EventLog eventLog = new EventLog();
+        private EventLog eventLog = new EventLog();
+
         public SamayEngineService()
         {
             InitializeComponent();
@@ -26,13 +21,17 @@ namespace Technisient
 
             //try
             //{
-
             //}
             //catch (Exception ex)
             //{
             //    eventLog.WriteEntry(ex.ToString());
             //}
+        }
 
+        protected override void OnShutdown()
+        {
+            Technisient.SamayEngine.SafeStopEngine();
+            base.OnShutdown();
         }
 
         protected override void OnStart(string[] args)
@@ -46,7 +45,6 @@ namespace Technisient
                 {
                     samayEngine.RunEngine();
                 }, TaskCreationOptions.LongRunning);
-
         }
 
         protected override void OnStop()
@@ -59,12 +57,6 @@ namespace Technisient
             //    System.Threading.Thread.Sleep(2000);
             //}
             base.OnStop();
-        }
-
-        protected override void OnShutdown()
-        {
-            Technisient.SamayEngine.SafeStopEngine();
-            base.OnShutdown();
         }
     }
 }

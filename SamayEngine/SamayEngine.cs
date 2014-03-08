@@ -80,10 +80,11 @@ namespace Technisient
         {
             _stopEngine = true;
         }
+
         public void RunEngine()
         {
 #if !DEBUG
-           // System.Threading.Thread.Sleep(15000); //to attach when running inside service
+            // System.Threading.Thread.Sleep(15000); //to attach when running inside service
 #endif
 
 #if DEBUG

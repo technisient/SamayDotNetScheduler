@@ -1,42 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Technisient;
 using Technisient.SamayConfig;
 
 namespace InteractWithSamay
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
-        {
-            try
-            {
-                SamaySharedLib samay = new SamaySharedLib();
-                string c = samay.GetConfig();
-                Console.WriteLine(c);
-
-                //  Engine engine = JsonConvert.DeserializeObject<Engine>(c);
-
-               // samay.RemoveJob("New Task 2");
-
-                Job j = GetNewJob();
-                samay.AddJob(JsonConvert.SerializeObject(j), "Ading a new job for xyz");
-
-              
-                samay.ReloadConfig();
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-
-            Console.WriteLine("Done!");
-            Console.ReadKey();
-        }
-        
         private static Job GetNewJob()
         {
             Job job2 = new Job();
@@ -62,18 +33,18 @@ namespace InteractWithSamay
                 ClassName = "Task.Task1",
                 LogLevel = Technisient.LogLevel.Trace,
                 param = new List<TaskParameter>{
-                    new TaskParameter{ 
-                        Name= "Number1", 
+                    new TaskParameter{
+                        Name= "Number1",
                         Value = new List<string>{"8"}
                     },
-                    new TaskParameter{ 
-                        Name= "Number2", 
+                    new TaskParameter{
+                        Name= "Number2",
                         Value = new List<string>{"25"}
                     }
                 }
             };
 
-           // job2.TaskChain = new TaskChain { Task = new List<Task> { taskA } };
+            // job2.TaskChain = new TaskChain { Task = new List<Task> { taskA } };
 
             //Optional - Task chaining
 
@@ -82,20 +53,42 @@ namespace InteractWithSamay
                 ClassName = "Task.Task2",
                 LogLevel = Technisient.LogLevel.Trace,
                 param = new List<TaskParameter>{
-                    new TaskParameter{ 
-                        Name= "Number1", 
+                    new TaskParameter{
+                        Name= "Number1",
                         Value = new List<string>{"58"}
                     }
                 }
             };
 
-             job2.TaskChain = new TaskChain { Task = new List<Task> { taskA, taskB } };
-
+            job2.TaskChain = new TaskChain { Task = new List<Task> { taskA, taskB } };
 
             return job2;
-
-          
         }
 
+        private static void Main(string[] args)
+        {
+            try
+            {
+                SamaySharedLib samay = new SamaySharedLib();
+                string c = samay.GetConfig();
+                Console.WriteLine(c);
+
+                //  Engine engine = JsonConvert.DeserializeObject<Engine>(c);
+
+                // samay.RemoveJob("New Task 2");
+
+                Job j = GetNewJob();
+                samay.AddJob(JsonConvert.SerializeObject(j), "Ading a new job for xyz");
+
+                samay.ReloadConfig();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            Console.WriteLine("Done!");
+            Console.ReadKey();
+        }
     }
 }
