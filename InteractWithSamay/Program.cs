@@ -8,6 +8,48 @@ namespace InteractWithSamay
 {
     public class Program
     {
+        private static void Main(string[] args)
+        {
+            try
+            {
+                SamaySharedLib samay = new SamaySharedLib();
+
+                //**********  Read Current Engine Settings  *****************
+
+                string c = samay.GetConfig();
+                Console.WriteLine(c);
+                Engine engine = JsonConvert.DeserializeObject<Engine>(c);
+
+                //***********************************************************
+
+
+
+                //**********  Removing a Job  *********************
+
+                // samay.RemoveJob("New Task 2");
+
+                //*************************************************
+
+
+                //**********  Adding a Job  *********************
+
+                Job j = GetNewJob();
+                samay.AddJob(JsonConvert.SerializeObject(j), "Ading a new job for xyz");
+
+                samay.ReloadConfig(); //Very important step! Won't use the new settings until next engine restart otherwise
+
+                //******************************************
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            Console.WriteLine("Done!");
+            Console.ReadKey();
+        }
+
         private static Job GetNewJob()
         {
             Job job2 = new Job();
@@ -46,7 +88,9 @@ namespace InteractWithSamay
 
             // job2.TaskChain = new TaskChain { Task = new List<Task> { taskA } };
 
-            //Optional - Task chaining
+            //*******************************
+            //    Optional - Task chaining
+            //*******************************
 
             Task taskB = new Task
             {
@@ -65,30 +109,5 @@ namespace InteractWithSamay
             return job2;
         }
 
-        private static void Main(string[] args)
-        {
-            try
-            {
-                SamaySharedLib samay = new SamaySharedLib();
-                string c = samay.GetConfig();
-                Console.WriteLine(c);
-
-                //  Engine engine = JsonConvert.DeserializeObject<Engine>(c);
-
-                // samay.RemoveJob("New Task 2");
-
-                Job j = GetNewJob();
-                samay.AddJob(JsonConvert.SerializeObject(j), "Ading a new job for xyz");
-
-                samay.ReloadConfig();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-
-            Console.WriteLine("Done!");
-            Console.ReadKey();
-        }
     }
 }
