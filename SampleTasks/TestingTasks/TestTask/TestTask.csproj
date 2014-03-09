@@ -58,7 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\SharedLib\SamaySharedLib.csproj">
+    <ProjectReference Include="..\..\..\SharedLib\SamaySharedLib.csproj">
       <Project>{703CD095-406E-442C-AEC9-EC34D90E9F50}</Project>
       <Name>SamaySharedLib</Name>
     </ProjectReference>
@@ -76,7 +76,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "..\..\..\..\..\Tasks"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "..\..\..\..\..\SampleTasks\Tasks"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

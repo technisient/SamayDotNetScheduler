@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{20A2560E-641A-475E-A5EA-855755273A10}</ProjectGuid>
+    <ProjectGuid>{56D958E7-0A56-4C44-A847-6468031C4ACC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Task</RootNamespace>
@@ -47,14 +47,14 @@
     <Compile Include="Task1.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\SharedLib\SamaySharedLib.csproj">
+    <ProjectReference Include="..\..\..\SharedLib\SamaySharedLib.csproj">
       <Project>{703CD095-406E-442C-AEC9-EC34D90E9F50}</Project>
       <Name>SamaySharedLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "..\..\..\..\..\Tasks"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "..\..\..\..\..\SampleTasks\Tasks"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
