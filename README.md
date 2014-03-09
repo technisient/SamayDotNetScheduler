@@ -1,14 +1,15 @@
 Samay .NET Scheduler
 ====================
 
+**[http://dotnetscheduler.com/engine](http://dotnetscheduler.com/engine)**
+
 Samay is a free & simple to use stand-alone system automating all your .NET scheduling needs. It completely replaces Windows© Services & Windows© Task Scheduler for scheduling background tasks like reporting, maintenance, nightly runs, timers and other cron-like jobs. 
 
 Documentation
 -------------
-For detailed documentation and download, please go to the official project website here:
 
-[Project Home Page](http://dotnetscheduler.com/engine)
--------------------
+For detailed documentation and download, please go to the official project website here: **[Project Home Page](http://dotnetscheduler.com/engine)**
+
 
 .NET Scheduler Features:
 ------------------------
