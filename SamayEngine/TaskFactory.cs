@@ -11,9 +11,14 @@ namespace Technisient
         internal Dictionary<string, string> Initialize()
         {
             Dictionary<string, string> TaskAssemblyDict = new Dictionary<string, string>();
+            string taskDir = Technisient.SamayEngine.EnsureFullPath(Settings.Default.TasksDirectory);
+
+            if (!Directory.Exists(taskDir))
+                Directory.CreateDirectory(taskDir);
 
             //cache all Tasks assembly names in the beginning.
-            DirectoryInfo dI = new DirectoryInfo(Technisient.SamayEngine.EnsureFullPath(Settings.Default.TasksDirectory));
+            DirectoryInfo dI = new DirectoryInfo(taskDir);
+
             FileInfo[] files = dI.GetFiles("*.dll");
 
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);

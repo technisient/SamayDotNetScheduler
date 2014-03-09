@@ -63,7 +63,10 @@ namespace Technisient
         #endregion Declarations
 
         public SamayEngine()
-        {
+        {  
+            //when starting from scratch
+            Config.InitSamayDB(EnsureFullPath(Settings.Default.DatabasePath), GetDBConnectionString());
+
             SamayLogger.InitSamayLogger(GetDBConnectionString());
             SamayLogger.SetLogLevel("Startup", LogLevel.Trace);
             SamayLogger.SetLogLevel("Engine Stop", LogLevel.Trace);
@@ -85,11 +88,6 @@ namespace Technisient
         {
 #if !DEBUG
             // System.Threading.Thread.Sleep(15000); //to attach when running inside service
-#endif
-
-#if DEBUG
-            //when starting from scratch
-         //   InitializeSampleConfig();
 #endif
 
             RunEngine(null, Config.GetSamayConfig(SamayEngine.GetDBConnectionString()));

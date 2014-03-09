@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
@@ -16,6 +18,10 @@ namespace Technisient
         {
             try
             {
+                
+                SamayLogger.SetLogLevel(SamayLogger.SamayEngineLoggingGUID, engine.EngineConfig.LogLevel);
+                LogInfo(JsonConvert.SerializeObject(engine, Formatting.Indented));
+
                 AppDomain ad = AppDomain.CreateDomain("SamayEnginedomain" + DateTime.Now.ToString());
                 TaskFactory tf = (TaskFactory)ad.CreateInstanceAndUnwrap(
                     Assembly.GetExecutingAssembly().FullName,
@@ -25,8 +31,7 @@ namespace Technisient
                 AppDomain.Unload(ad);
                 //TaskFactory.Initialize();
 
-                SamayLogger.SetLogLevel(SamayLogger.SamayEngineLoggingGUID, engine.EngineConfig.LogLevel);
-
+           
                 //at the Job level, we still use the Engine log level
                 foreach (SamayConfig.Job job in engine.Jobs)
                 {
@@ -140,25 +145,5 @@ namespace Technisient
                 EventLog.WriteEntry(sSource, ex.ToString());
             }
         }
-
-        private void InitializeSampleConfig()
-        {
-            string f = EnsureFullPath(Settings.Default.DatabasePath);
-            if (File.Exists(f))
-            {
-                Console.Write("Samay Database file already exists in " + f + ". Would you like to continue? (y/n)  :  ");
-                if (Console.ReadKey().KeyChar.ToString().ToLower() == "y")
-                    Console.WriteLine("\nOverwriting existing database");
-                else
-                    Console.WriteLine("\nSkipping new Database initialization");
-            }
-
-            if (!Directory.Exists(Path.GetDirectoryName(f)))
-                Directory.CreateDirectory(Path.GetDirectoryName(f));
-
-            SQLiteConnection.CreateFile(f);
-            Engine config = Config.GetSampleConfig();
-            Config.SaveSamayConfig(config, "Initialize Samples Config", GetDBConnectionString());
-        }
-    }
+    }     
 }

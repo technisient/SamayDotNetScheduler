@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.IO;
 using Technisient.SamayConfig;
 
 namespace Technisient
@@ -27,6 +28,8 @@ namespace Technisient
             SaveSamayConfig(engine, comment, samayDB_ConnectionString);
             SamayLogger.Log("Successfully added new Job '" + job.JobName + "'", SamayLogger.SamayEngineLogJobName, "Config", "Engine", LogLevel.Info);
             return true;
+
+
         }
 
         public static Engine GetSamayConfig(string samayDB_ConnectionString)
@@ -76,7 +79,7 @@ namespace Technisient
             Job calcPi = new Job();
             calcPi.JobName = "Calculate Pie";
 
-            calcPi.Interval = new JobInterval { Interval_msec = 10000 };
+            calcPi.Interval = new JobInterval { Interval_msec = 60000 };
             calcPi.Schedules.Add(new JobSchedule
             {
                 JobScheduleType = JobScheduleTypeEnum.JobScheduleDaily,
@@ -98,7 +101,7 @@ namespace Technisient
                 param = new List<TaskParameter>{
                     new TaskParameter{
                         Name= "PiLength",
-                        Value = new List<string>{"30"}
+                        Value = new List<string>{"20"}
                     }
                 }
             };
@@ -174,6 +177,19 @@ namespace Technisient
                 {
                     cn.Close();
                 }
+            }
+        }
+
+        public static void InitSamayDB(string filePath, string dbconnectionString)
+        {
+            if (!File.Exists(filePath))
+            {
+                if (!Directory.Exists(Path.GetDirectoryName(filePath)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                SQLiteConnection.CreateFile(filePath);
+                Engine config = GetSampleConfig();
+                SaveSamayConfig(config, "Initialize Samples Config", dbconnectionString);
             }
         }
     }
