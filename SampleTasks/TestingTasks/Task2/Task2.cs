@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Technisient;
 
-namespace Task
+namespace TestTask
 {
     public class Task2 : TaskBase
     {
