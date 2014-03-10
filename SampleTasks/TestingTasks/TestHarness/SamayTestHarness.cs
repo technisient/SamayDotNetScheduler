@@ -8,7 +8,7 @@ using Technisient.SamayConfig;
 using TestTask;
 
 
-namespace TestHarness
+namespace SamayTestHarness
 {
     class TestHarness
     {

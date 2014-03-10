@@ -194,7 +194,7 @@ rem copy "$(TargetDir)*.exe" "C:\Program Files (x86)\Technisient\Samay Enterpris
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties IntelliLock_Enabled="0" IntelliLock_Store="0" IntelliLock_Settings="" IntelliLock_Output="[output_dir]SamayEngineService_Locked\SamayEngineService.exe" IntelliLock_ProjectFile="C:\Users\Vaio\Documents\Visual Studio 2010\Projects\Samay\Intellilock\Samay.ilproj" IntelliLock_Configuration="ALL" />
+      <UserProperties IntelliLock_Configuration="ALL" IntelliLock_ProjectFile="C:\Users\Vaio\Documents\Visual Studio 2010\Projects\Samay\Intellilock\Samay.ilproj" IntelliLock_Output="[output_dir]SamayEngineService_Locked\SamayEngineService.exe" IntelliLock_Settings="" IntelliLock_Store="0" IntelliLock_Enabled="0" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
